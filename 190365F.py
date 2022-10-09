@@ -146,30 +146,111 @@ def edit(patient_username, privilege):
     config_parser.read("data.ini")
     while True:
         record = input(
-            "What do you want to edit\n 1-personal details \n 2-sickness details \n 3-drug prescriptions \n 4-lab test prespriptions\n 5-exit")
+            "What do you want to edit\n 1-personal details \n 2-sickness details \n 3-drug prescriptions \n 4-lab test prespriptions\n 5-exit\n")
         if record == "1":
             if privilege == "p4":
-                print('x')
+                print('Current Details: ', config_parser.get(
+                    patient_username, "personal_details"))
+                new_details = input("Enter new details: ")
+                config_parser.set(patient_username,
+                                  "personal_details", new_details)
+                print('New Details: ', config_parser.get(
+                    patient_username, 'personal_details'))
+            else:
+                print('No access')
         elif record == "2":
-            print(config_parser.get(patient_username, "sickness_details"))
-            continue
+            if privilege == "p1":
+                print('Current Details: ', config_parser.get(
+                    patient_username, "sickness_details"))
+                new_details = input("Enter new details: ")
+                config_parser.set(patient_username,
+                                  "sickness_details", new_details)
+                print('New Details: ', config_parser.get(
+                    patient_username, "sickness_details"))
+            else:
+                print('No access')
         elif record == "3":
-            if (privilege != 'p2'):
-                print(config_parser.get(patient_username, "drug_prescription"))
+            if privilege == "p1":
+                print('Current prescription: ', config_parser.get(
+                    patient_username, "drug_prescription"))
+                new_prescription = input("Enter new prescription: ")
+                config_parser.set(patient_username,
+                                  "drug_prescription", new_prescription)
+                print('New prescription: ', config_parser.get(
+                    patient_username, "drug_prescription"))
             else:
                 print('No access')
-            continue
         elif record == "4":
-            if (privilege != 'p3'):
-                print(config_parser.get(patient_username, "lab_prescription"))
+            if privilege == "p1":
+                print('Current prescription: ', config_parser.get(
+                    patient_username, "lab_prescription"))
+                new_prescription = input("Enter new prescription: ")
+                config_parser.set(patient_username,
+                                  "lab_prescription", new_prescription)
+                print('New prescription: ', config_parser.get(
+                    patient_username, "lab_prescription"))
             else:
                 print('No access')
-            continue
         elif record == "5":
             break
         else:
             print("Invalid input")
+    config_parser.write(open('data.ini', 'w'))
 
 
-# register()
-view("lasith32", "4")
+def session(username):
+    config_parser = configparser.ConfigParser()
+    config_parser.read('config.ini')
+    privilege_level = config_parser.get(username, "privilege_level")
+    if privilege_level == "p0":
+        config_parser = configparser.ConfigParser()
+        config_parser.read('config.ini')
+        sections = config_parser.sections()
+        if username in sections:
+            view(username, privilege_level)
+        else:
+            print("No records currently")
+    else:
+        while True:
+            action = input("Press 1 to view/edit\nPress any other to exit\n")
+            if action == "1":
+                config_parser = configparser.ConfigParser()
+                config_parser.read('config.ini')
+                sections = config_parser.sections()
+                while True:
+                    task = input(
+                        "What do you want to do\n 1-View details\n 2-Edit details\n 3-Exit\n")
+                    if task == "1" or task == "2":
+                        patient_username = input("Enter patient username: ")
+                        if patient_username in sections:
+                            if task == "1":
+                                view(patient_username, privilege_level)
+                                break
+                            elif task == "2":
+                                edit(patient_username, privilege_level)
+                                break
+                        else:
+                            print("No records currently")
+                            continue
+                    elif task == "3":
+                        break
+                    else:
+                        print("Invalid Input")
+                        continue
+            else:
+                break
+
+
+print("Welcome to hospital system")
+while True:
+    activity = input(
+        "What do you need to do?\n 1-Login\n 2-Register\n 3-Exit\n")
+    if activity == "1":
+        login()
+    elif activity == "2":
+        register()
+    elif activity == "3":
+        break
+    else:
+        print("Invalid input")
+        continue
