@@ -1,30 +1,19 @@
 import configparser
 import getpass
 from passlib.hash import md5_crypt
-import re
-
-# Checks password strenght and confirms password
 
 
 def getpassword():
     while True:
-        print("Password should contain\n at least 8 characters\n at least one upper case\n at least one lower case\n at least one digit\n")
         password = getpass.getpass(prompt="Password: ")
-        password_pattern = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$"
-        if re.match(password_pattern, password):
-            confirm_pass = getpass.getpass(prompt="Confirm Password: ")
-            if (password == confirm_pass):
-                break
-            else:
-                print("Passwords did not match")
-                continue
+        confirm_pass = getpass.getpass(prompt="Confirm Password: ")
+        if (password == confirm_pass):
+            break
         else:
-            print("Password not strong enough")
+            print("Passwords did not match")
             continue
     hashed_pass = md5_crypt.hash(password)
     return hashed_pass
-
-# Account registration. Takes username and password as input. Sets user_type and privilege_level.
 
 
 def register():
@@ -48,7 +37,7 @@ def register():
                     "Select staff type \n1-Doctor\n2-Lab\n3-Pharmacy\n4-Admin\n")
                 if staff_type == "1":
                     verificiation = input("Enter code\n")
-                    if verificiation == "dct321":
+                    if verificiation == "dct101":
                         user_type = "doctor"
                         privilege_level = "p1"
                         break
@@ -57,7 +46,7 @@ def register():
                         continue
                 elif staff_type == "2":
                     verificiation = input("Enter code\n")
-                    if verificiation == "lab321":
+                    if verificiation == "lab101":
                         user_type = "lab"
                         privilege_level = "p2"
                         break
@@ -66,7 +55,7 @@ def register():
                         continue
                 elif staff_type == "3":
                     verificiation = input("Enter code\n")
-                    if verificiation == "phm321":
+                    if verificiation == "phm101":
                         user_type = "pharmacy"
                         privilege_level = "p3"
                         break
@@ -75,7 +64,7 @@ def register():
                         continue
                 elif staff_type == "4":
                     verificiation = input("Enter code\n")
-                    if verificiation == "adm321":
+                    if verificiation == "adm101":
                         user_type = "admin"
                         privilege_level = "p4"
                         break
@@ -99,8 +88,6 @@ def register():
     config_file.close()
     print("Registration Successful")
 
-# Checks password and username
-
 
 def login():
     while True:
@@ -122,8 +109,6 @@ def login():
         else:
             print("Invalid username")
             continue
-
-# Handles access in views
 
 
 def view(patient_username, privilege):
@@ -154,8 +139,6 @@ def view(patient_username, privilege):
             break
         else:
             print("Invalid input")
-
-# Handles access in edits
 
 
 def edit(patient_username, privilege):
@@ -213,8 +196,6 @@ def edit(patient_username, privilege):
         else:
             print("Invalid input")
     config_parser.write(open('data.ini', 'w'))
-
-# Handles session once the user logs in
 
 
 def session(username):
